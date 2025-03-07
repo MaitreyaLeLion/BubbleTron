@@ -1,0 +1,6 @@
+numpy
+ultralytics
+manga_ocr
+PyQt6
+PIL
+deepl
