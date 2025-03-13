@@ -36,6 +36,8 @@ class OnlyOCRProcessingThread(QThread):
         """
         deepl_client = deepl.DeepLClient(self.api_key, send_platform_info=False)
         translation = deepl_client.translate_text(text, target_lang="EN-US", source_lang="JA",glossary="5ee17871-824b-4d69-a6a9-156a9fb39e50")
+        if self.mainWindow.targetLang != "EN-US":
+            translation = deepl_client.translate_text(translation.text, target_lang=self.mainWindow.targetLang, source_lang="EN")
         
         return translation.text
 

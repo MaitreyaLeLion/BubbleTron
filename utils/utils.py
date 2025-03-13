@@ -1,4 +1,6 @@
 import numpy as np
+from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtWidgets import QGraphicsPixmapItem
 
 def verbosePrint(text, verboseLevel, verboseThreshold):
     """Print text if verbose level is above the threshold.
@@ -7,7 +9,7 @@ def verbosePrint(text, verboseLevel, verboseThreshold):
         verboseLevel: An integer representing the verbose level.
         verboseThreshold: An integer representing the verbose threshold.
     """
-    if verboseLevel > verboseThreshold:
+    if verboseLevel >= verboseThreshold:
         print(text)
 
 def boundingBoxFromMask(mask):
@@ -162,3 +164,49 @@ def computeOptimalFontSize(font, text, box_width, box_height, painter):
 
     return optimal_size, optimal_lines, padding
 
+def createWhiteMaskPixmapFromNpMask(mask, border=False):
+    """Create a QPixmap from a NumPy mask."
+    Args:
+        mask: A 3D NumPy array where the first dimension is the channel.
+        border: A boolean to draw a border around the mask.
+    Returns:
+        A QGraphicsPixmapItem of the mask.
+    """
+    _, height, width = mask.shape
+    rgba_image = np.zeros((height, width, 4), dtype=np.uint8)
+    rgba_image[..., :3] = 255  # Set RGB channels to white (255)
+    rgba_image[..., 3] = np.where(mask[0] > 0, 255, 0)  # Set alpha: 255 for mask, 0 for background
+
+    # Only create border if drawBorder is True
+    if border:        # Create a border by finding edge pixels
+        mask_2d = mask[0].copy()
+            
+        # Create a slightly eroded version of the mask to find the border
+        from scipy import ndimage
+        eroded_mask = ndimage.binary_erosion(mask_2d, iterations=2)
+        border_mask = np.logical_and(mask_2d, ~eroded_mask)  # Border pixels
+
+        # Set border pixels to black (0,0,0) while keeping alpha at 255
+        rgba_image[..., 0][border_mask] = 0  # R
+        rgba_image[..., 1][border_mask] = 0  # G
+        rgba_image[..., 2][border_mask] = 0  # B
+        # Alpha is already set to 255 for these pixels
+
+    # Create QImage from RGBA data
+    qimage = QImage(rgba_image.data, width, height, width * 4, QImage.Format.Format_RGBA8888)
+    mask_pixmap = QPixmap.fromImage(qimage)
+    mask_item = QGraphicsPixmapItem(mask_pixmap)
+    return mask_item
+
+def bubbleIsNotInDict(bubble, bubbleList):
+    """Check if a bubble is not in the bubble dictionary.
+    Args:
+        bubble: A Bubble object to check.
+        bubbleList: A list of Bubble objects.
+    Returns:
+        A boolean indicating if the bubble is not in the dictionary.
+    """
+    for i,items in enumerate(bubbleList):
+        if bubble.getBubbleText() == items["bubbleText"]:
+            return i
+    return -1

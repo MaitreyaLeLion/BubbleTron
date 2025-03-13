@@ -1,12 +1,11 @@
 from PyQt6.QtCore import QThread
-from PyQt6.QtGui import QImage, QPixmap
-from PyQt6.QtWidgets import QGraphicsPixmapItem
 import numpy as np
 import asyncio
 import deepl
 from time import perf_counter
 from PIL import Image
-from utils.utils import verbosePrint, boundingBoxFromMask
+from utils.utils import verbosePrint
+from utils.utils import boundingBoxFromMask
 from utils.OCRBubble import OCRBubble
 
 class FullProcessingThread(QThread):
@@ -68,8 +67,6 @@ class FullProcessingThread(QThread):
         # self.mainWindow.numpyArraySAMMaskOutputQueue.put((self.threadId, mask))
         # self.output["numpyArraySAMMask"] = mask
         
-        _, height, width = mask.shape # Get mask dimensions
-        
         verbosePrint(text="Running calculations to extract bounding box from mask.", verboseLevel=self.verboseLevel, verboseThreshold=2)
         t0 = perf_counter()
         box = boundingBoxFromMask(mask)
@@ -79,40 +76,10 @@ class FullProcessingThread(QThread):
         self.output.setPosition((box[0], box[1]))
         verbosePrint(text=f"Time taken for bounding box extraction : {perf_counter()-t0}s.", verboseLevel=self.verboseLevel, verboseThreshold=2)
 
-        verbosePrint(text="Converting mask to QImage.", verboseLevel=self.verboseLevel, verboseThreshold=2)
-        t0 = perf_counter()
-
-        # Create RGBA image with white color and alpha channel
-        rgba_image = np.zeros((height, width, 4), dtype=np.uint8)
-        rgba_image[..., :3] = 255  # Set RGB channels to white (255)
-        rgba_image[..., 3] = np.where(mask[0] > 0, 255, 0)  # Set alpha: 255 for mask, 0 for background
-
-        # Only create border if drawBorder is True
-        if False:
-            verbosePrint(text="Adding border to mask.", verboseLevel=self.verboseLevel, verboseThreshold=2)
-            
-            # Create a border by finding edge pixels
-            mask_2d = mask[0].copy()
-                
-            # Create a slightly eroded version of the mask to find the border
-            from scipy import ndimage
-            eroded_mask = ndimage.binary_erosion(mask_2d, iterations=2)
-            border_mask = np.logical_and(mask_2d, ~eroded_mask)  # Border pixels
-
-            # Set border pixels to black (0,0,0) while keeping alpha at 255
-            rgba_image[..., 0][border_mask] = 0  # R
-            rgba_image[..., 1][border_mask] = 0  # G
-            rgba_image[..., 2][border_mask] = 0  # B
-            # Alpha is already set to 255 for these pixels
-
-        # Create QImage from RGBA data
-        qimage = QImage(rgba_image.data, width, height, width * 4, QImage.Format.Format_RGBA8888)
-        verbosePrint(text=f"Time taken for converting mask to QImage : {perf_counter()-t0}s.", verboseLevel=self.verboseLevel, verboseThreshold=2)
-        mask_pixmap = QPixmap.fromImage(qimage)
-        mask_item = QGraphicsPixmapItem(mask_pixmap)
+        
         # Include thread ID when putting item in queue
         # self.mainWindow.SAMMaskOutputQueue.put((self.threadId, mask_item))
-        self.output.setWhiteMask(mask_item) 
+        self.output.setWhiteMask(mask) 
         
         verbosePrint(text="Running OCR.", verboseLevel=self.verboseLevel, verboseThreshold=2)
         t0 = perf_counter()
@@ -152,11 +119,11 @@ class FullProcessingThread(QThread):
             verbosePrint(text=f"Time taken for translation : {perf_counter()-t0}s.", verboseLevel=self.verboseLevel, verboseThreshold=2)
             # Store text with thread ID
             # self.mainWindow.OCRTextQueue.append((self.threadId, english_translation))
-            self.output.setbubbleText(english_translation)
+            self.output.setBubbleText(english_translation)
         except Exception as e:
             print(f"Translation error: {e}")
             # self.mainWindow.OCRTextQueue.append((self.threadId, text))
-            self.output.setbubbleText(text)
+            self.output.setBubbleText(text)
         finally:
             self.loop.close()
         

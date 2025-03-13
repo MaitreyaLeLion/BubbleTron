@@ -1,0 +1,208 @@
+/* Main Window */
+QMainWindow, QWidget {
+    background-color: #121212;
+    color: #FFFFFF;
+    border: none;
+}
+
+/* Menu Bar */
+QMenuBar {
+    background-color: #121212;
+    color: #FFFFFF;
+    border-bottom: 2px solid #FF00FF;
+    padding: 4px;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background-color: #2D2D2D;
+    color: #FF00FF;
+}
+
+QMenu {
+    background-color: #1A1A1A;
+    border: 1px solid #FF00FF;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+QMenu::item {
+    padding: 5px 20px;
+    border-radius: 2px;
+}
+
+QMenu::item:selected {
+    background-color: #2D2D2D;
+    color: #FF00FF;
+}
+
+/* Panels */
+QSplitter::handle {
+    background-color: #FF00FF;
+}
+
+/* Graphics View */
+QGraphicsView {
+    background-color: #1A1A1A;
+    border: 1px solid #FF00FF;
+    border-radius: 4px;
+    selection-background-color: #FF00FF40;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #1E1E1E;
+    color: #FFFFFF;
+    border: 1px solid #FF00FF;
+    border-radius: 4px;
+    padding: 5px;
+    outline: none;
+    min-height: 25px;
+}
+
+QPushButton:hover {
+    background-color: #2D2D2D;
+    border: 1px solid #FF40FF;
+}
+
+QPushButton:pressed {
+    background-color: #3D3D3D;
+    color: #FF00FF;
+}
+
+/* Toggle buttons */
+QPushButton#toggleButton {
+    background-color: #2D2D2D;
+    color: #FF00FF;
+    border-radius: 0px;
+    border: 1px solid #FF00FF;
+    font-weight: bold;
+}
+
+
+/* CheckBox */
+QCheckBox {
+    spacing: 8px;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #FF00FF;
+    border-radius: 3px;
+    background-color: #1E1E1E;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #FF00FF;
+    image: url(check.png);
+}
+
+/* ComboBox */
+QComboBox {
+    border: 1px solid #FF00FF;
+    border-radius: 4px;
+    padding: 3px 18px 3px 5px;
+    min-width: 6em;
+    background-color: #1E1E1E;
+    color: #FFFFFF;
+}
+
+QComboBox:editable {
+    background: #1E1E1E;
+}
+
+QComboBox:hover {
+    border: 1px solid #FF40FF;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #FF00FF;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+    image: url(down_arrow.png);
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #FF00FF;
+    background-color: #1E1E1E;
+    selection-background-color: #2D2D2D;
+    selection-color: #FF00FF;
+}
+
+/* ScrollBars */
+QScrollBar:vertical {
+    border: none;
+    background-color: #1A1A1A;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #FF00FF;
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background-color: #1A1A1A;
+    height: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #FF00FF;
+    border-radius: 5px;
+    min-width: 20px;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* Labels */
+QLabel {
+    color: #FFFFFF;
+    font-weight: normal;
+}
+
+/* Tool buttons with proper spacing */
+QPushButton#toolButton {
+    background-color: #1E1E1E;
+    padding: 10px 10px 10px 15px; /* Increase left padding to 15px */
+    font-weight: bold;
+    text-align: left;
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    margin: 2px 0px;  /* Add small vertical margin */
+}
+
+QPushButton#toolButton:checked, QPushButton#toolButton:pressed {
+    background-color: #2D2D2D;
+    border-left: 3px solid #FF00FF;
+    color: #FF00FF;
+}
+
+/* Panel internal spacing */
+#leftSidePanel, #rightSidePanel {
+    background-color: #1A1A1A; 
+    border: 1px solid #FF00FF;
+    border-radius: 4px;
+    padding: 5px;
+}
