@@ -1,3 +1,5 @@
 /.venv
 /models
 /__pycache__
+/.vscode
+/utils/__pycache__

@@ -55,7 +55,7 @@ def boundingBoxFromMask(mask):
         from operator import itemgetter
         
         # Reduced sampling for large masks
-        max_unique_points = 200
+        max_unique_points = 100
         unique_x = np.unique(x_coords)
         if len(unique_x) > max_unique_points:
             step = len(unique_x) // max_unique_points
